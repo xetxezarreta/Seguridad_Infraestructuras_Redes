@@ -32,5 +32,12 @@ def str_xor(hex1, hex2):
 # Store the positions where you think there is an space
 # If you xor the ciphertext, with the space symbol, you'll get the key for that position
 
-text1 = str_xor(ciphertexts[0], ciphertexts[1])
-print(text1)
+xorList = list()
+
+for i in range(len(ciphertexts) - 1):    
+    for j in range(i + 1, len(ciphertexts)):
+        xor = str_xor(ciphertexts[i], ciphertexts[j])
+        xorList.append(xor)
+
+print(len(xorList))
+       
