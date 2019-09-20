@@ -6,7 +6,7 @@
 # >>> str_xor('61','20')
 # 'A'
 
-ciphertexts = (
+ciphers = (
     '0d071c154f1c1d4415481519041a550a0c0f0b520d15174c071b1b4f0d1f405252',
     '79221c0d0a194e0d07480b0411594043190b150b41131a0305541d0a0f10494453',
     '104f190f04104e021d1a001c0a0b4a104f0709522a1b1b181915490e4e1f4e5501',
@@ -32,12 +32,52 @@ def str_xor(hex1, hex2):
 # Store the positions where you think there is an space
 # If you xor the ciphertext, with the space symbol, you'll get the key for that position
 
-def xor_messages(ciphertexts):
-    xorList = list()
-    for i in range(len(ciphertexts) - 1):    
-        for j in range(i + 1, len(ciphertexts)):
-            xor = str_xor(ciphertexts[i], ciphertexts[j])        
-            xorList.append(xor)
-    return xorList
+import string
+import collections
 
-xor_messages_list = xor_messages(ciphertexts)
+# XORs two string
+def strxor(a, b):     # xor two strings (trims the longer input)
+    return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
+
+
+# The target ciphertext we want to crack
+target_cipher = ciphers[0]
+
+# Final key
+final_key = [None]*150
+# To store the positions we know are broken
+known_key_positions = set()
+
+# For each ciphertext
+for current_index, ciphertext in enumerate(ciphers):
+
+	counter = collections.Counter()
+	# for each other ciphertext
+	for index, ciphertext2 in enumerate(ciphers):
+		if current_index != index: # don't xor a ciphertext with itself
+			for indexOfChar, char in enumerate(strxor(bytes.fromhex(ciphertext).decode(), bytes.fromhex(ciphertext2).decode())): # Xor the two ciphertexts
+				# If a character in the xored result is a alphanumeric character, it means there was probably a space character in one of the plaintexts (we don't know which one)
+				if char in string.printable and char.isalpha(): counter[indexOfChar] += 1 # Increment the counter at this index
+	knownSpaceIndexes = []
+
+	# Loop through all positions where a space character was possible in the current_index cipher
+	for ind, val in counter.items():
+		# If a space was found at least 7 times at this index out of the 9 possible XORS, then the space character was likely from the current_index cipher!
+		if val >= 7: knownSpaceIndexes.append(ind)
+	#print knownSpaceIndexes # Shows all the positions where we now know the key!
+
+	# Now Xor the current_index with spaces, and at the knownSpaceIndexes positions we get the key back!
+	xor_with_spaces = strxor(bytes.fromhex(ciphertext).decode(),' '*150)
+	for index in knownSpaceIndexes:
+		# Store the key's value at the correct position
+		final_key[index] = xor_with_spaces[index].encode()
+		# Record that we known the key at this position
+		known_key_positions.add(index)
+
+print(final_key)
+
+import binascii
+key_hex = binascii.hexlify(b"youfoundthekey!congratulations!!!").decode()
+
+print(str_xor(key_hex, ciphers[3]))
+
