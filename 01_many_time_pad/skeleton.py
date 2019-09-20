@@ -19,7 +19,6 @@ ciphertexts = (
     '37001b150a1b1d0d1709094b160d530a01091452151c1418413d49181c1a554401',
     '792655020055000b00480e050a0e0114070f1352151b551b131d1d0a4e1d4e5601')
 
-
 # finds the xor of 2 hex's and returns ascii
 def str_xor(hex1, hex2):
     result = "".join(["%x" % (int(x, 16) ^ int(y, 16)) for (x, y) in zip(hex1, hex2)])
