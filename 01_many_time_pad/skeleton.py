@@ -56,6 +56,7 @@ for current_index, ciphertext in enumerate(ciphers):
         if val >= 7: 
             knownSpaceIndexes.append(ind)   
    
+    # Espacio en hexadecimal es '20'
     xor_with_spaces = str_xor(ciphertext, '20'*key_size)
 
     for index in knownSpaceIndexes:
