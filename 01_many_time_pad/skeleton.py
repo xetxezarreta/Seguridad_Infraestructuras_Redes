@@ -36,7 +36,6 @@ import string
 import collections
 
 key_size = 50
-target_cipher = ciphers[5]
 final_key = [None]*key_size
 known_key_positions = set()
 
