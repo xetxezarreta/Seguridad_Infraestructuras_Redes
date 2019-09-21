@@ -49,8 +49,8 @@ for ciphertext1 in ciphers:
                     counter[indexOfChar] += 1
 
     knownSpaceIndexes = []
-
-    for ind, val in counter.items():
+    
+    for ind, val in counter.items():  
         if val >= 7: 
             knownSpaceIndexes.append(ind)   
    
@@ -65,7 +65,7 @@ print(final_key)
 
 import binascii
 # Codificamos la key a hexadecimal.
-key_hex = binascii.hexlify(b"youfoundthekey!congratulations!!!").decode()
+key_hex = binascii.hexlify(b"Youfoundthekey!congratulations!!!").decode()
 # Desencriptamos haciendo xor(mensaje, key) y printamos los mensajes 
 for index, cipher in enumerate(ciphers):
     print(index + 1, "- ", str_xor(cipher, key_hex))
