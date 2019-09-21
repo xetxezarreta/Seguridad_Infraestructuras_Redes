@@ -39,11 +39,10 @@ key_size = 50
 final_key = [None]*key_size
 known_key_positions = set()
 
-for current_index, ciphertext1 in enumerate(ciphers):
+for ciphertext1 in ciphers:
     counter = collections.Counter()
-
-    for index, ciphertext2 in enumerate(ciphers):
-        if current_index != index:
+    for ciphertext2 in ciphers:
+        if ciphertext1 != ciphertext2: # para no hacer xor entre 2 iguales
             xor = str_xor(ciphertext1, ciphertext2)
             for indexOfChar, char in enumerate(xor):
                 if char.isalpha():
