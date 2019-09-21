@@ -68,6 +68,6 @@ print(final_key)
 import binascii
 # Codificamos la key a hexadecimal.
 key_hex = binascii.hexlify(b"youfoundthekey!congratulations!!!").decode()
-# Printamos los mensajes haciendo xor(mensaje, key)
+# Desemcriptamos haciendo xor(mensaje, key) y printamos los mensajes 
 for index, cipher in enumerate(ciphers):
     print(index + 1, "- ", str_xor(cipher, key_hex))
