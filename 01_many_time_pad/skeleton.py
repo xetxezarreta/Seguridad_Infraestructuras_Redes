@@ -39,14 +39,14 @@ key_size = 50
 final_key = [None]*key_size
 known_key_positions = set()
 
-for current_index, ciphertext in enumerate(ciphers):
+for current_index, ciphertext1 in enumerate(ciphers):
     counter = collections.Counter()
 
     for index, ciphertext2 in enumerate(ciphers):
         if current_index != index:
-            xor = str_xor(ciphertext, ciphertext2)
+            xor = str_xor(ciphertext1, ciphertext2)
             for indexOfChar, char in enumerate(xor):
-                if char in string.printable and char.isalpha():
+                if char.isalpha():
                     counter[indexOfChar] += 1
 
     knownSpaceIndexes = []
@@ -56,10 +56,10 @@ for current_index, ciphertext in enumerate(ciphers):
             knownSpaceIndexes.append(ind)   
    
     # Espacio en hexadecimal es '20'
-    xor_with_spaces = str_xor(ciphertext, '20'*key_size)
+    xor_with_spaces = str_xor(ciphertext1, '20'*key_size)
 
     for index in knownSpaceIndexes:
-	    final_key[index] = xor_with_spaces[index].encode()
+	    final_key[index] = xor_with_spaces[index]
 	    known_key_positions.add(index)
 
 print(final_key)
@@ -67,6 +67,6 @@ print(final_key)
 import binascii
 # Codificamos la key a hexadecimal.
 key_hex = binascii.hexlify(b"youfoundthekey!congratulations!!!").decode()
-# Desemcriptamos haciendo xor(mensaje, key) y printamos los mensajes 
+# Desencriptamos haciendo xor(mensaje, key) y printamos los mensajes 
 for index, cipher in enumerate(ciphers):
     print(index + 1, "- ", str_xor(cipher, key_hex))
