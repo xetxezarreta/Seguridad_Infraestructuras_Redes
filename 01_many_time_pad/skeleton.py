@@ -18,11 +18,11 @@ ciphers = (
     '384f170f1b550102540d030d0a0b55431b0147000415114c151c0c4f18165358',
     '37001b150a1b1d0d1709094b160d530a01091452151c1418413d49181c1a554401',
     '792655020055000b00480e050a0e0114070f1352151b551b131d1d0a4e1d4e5601')
-    
+
 
 # finds the xor of 2 hex's and returns ascii
 def str_xor(hex1, hex2):
-    result = "".join(["%x" % (int(x, 16) ^ int(y, 16)) for (x, y) in zip(hex1, hex2)])
+    result = "".join(["%x" % (int(x,16) ^ int(y,16)) for (x, y) in zip(hex1, hex2)])
     return bytes.fromhex(result).decode()
 
 # TODO: Suggested steps
@@ -35,49 +35,38 @@ def str_xor(hex1, hex2):
 import string
 import collections
 
-# XORs two string
-def strxor(a, b):     # xor two strings (trims the longer input)
-    return "".join([chr(ord(x) ^ ord(y)) for (x, y) in zip(a, b)])
-
-
-# The target ciphertext we want to crack
-target_cipher = ciphers[0]
-
-# Final key
-final_key = [None]*150
-# To store the positions we know are broken
+key_size = 50
+target_cipher = ciphers[5]
+final_key = [None]*key_size
 known_key_positions = set()
 
-# For each ciphertext
 for current_index, ciphertext in enumerate(ciphers):
+    counter = collections.Counter()
 
-	counter = collections.Counter()
-	# for each other ciphertext
-	for index, ciphertext2 in enumerate(ciphers):
-		if current_index != index: # don't xor a ciphertext with itself
-			for indexOfChar, char in enumerate(strxor(bytes.fromhex(ciphertext).decode(), bytes.fromhex(ciphertext2).decode())): # Xor the two ciphertexts
-				# If a character in the xored result is a alphanumeric character, it means there was probably a space character in one of the plaintexts (we don't know which one)
-				if char in string.printable and char.isalpha(): counter[indexOfChar] += 1 # Increment the counter at this index
-	knownSpaceIndexes = []
+    for index, ciphertext2 in enumerate(ciphers):
+        if current_index != index:
+            xor = str_xor(ciphertext, ciphertext2)
+            for indexOfChar, char in enumerate(xor):
+                if char in string.printable and char.isalpha():
+                    counter[indexOfChar] += 1
 
-	# Loop through all positions where a space character was possible in the current_index cipher
-	for ind, val in counter.items():
-		# If a space was found at least 7 times at this index out of the 9 possible XORS, then the space character was likely from the current_index cipher!
-		if val >= 7: knownSpaceIndexes.append(ind)
-	#print knownSpaceIndexes # Shows all the positions where we now know the key!
+    knownSpaceIndexes = []
 
-	# Now Xor the current_index with spaces, and at the knownSpaceIndexes positions we get the key back!
-	xor_with_spaces = strxor(bytes.fromhex(ciphertext).decode(),' '*150)
-	for index in knownSpaceIndexes:
-		# Store the key's value at the correct position
-		final_key[index] = xor_with_spaces[index].encode()
-		# Record that we known the key at this position
-		known_key_positions.add(index)
+    for ind, val in counter.items():
+        if val >= 7: 
+            knownSpaceIndexes.append(ind)   
+   
+    xor_with_spaces = str_xor(ciphertext, '20'*key_size)
+
+    for index in knownSpaceIndexes:
+	    final_key[index] = xor_with_spaces[index].encode()
+	    known_key_positions.add(index)
 
 print(final_key)
 
 import binascii
+# Codificamos la key a hexadecimal.
 key_hex = binascii.hexlify(b"youfoundthekey!congratulations!!!").decode()
-
-print(str_xor(key_hex, ciphers[3]))
-
+# Printamos los mensajes haciendo xor(mensaje, key)
+for index, cipher in enumerate(ciphers):
+    print(index + 1, "- ", str_xor(cipher, key_hex))
