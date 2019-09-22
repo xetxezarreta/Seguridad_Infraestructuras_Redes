@@ -71,3 +71,20 @@ key_hex = binascii.hexlify(b"Youfoundthekey!congratulations!!!").decode()
 # Desencriptamos haciendo xor(mensaje, key) y printamos los mensajes 
 for index, cipher in enumerate(ciphers):
     print(index + 1, "- ", str_xor(cipher, key_hex))
+
+# RESULTS
+# KEY= Youfoundthekey!congratulations!!!
+# MESSAGES
+# This is a practical lab for class
+#  Mikel is not a very good teacher
+# I like fireworks in Kontxa a lot 
+# Good thing we  use perfectly safe
+#  encryption for this strings this
+# OTP is called ONE time pad for a
+#  reason and that means this text
+#  can be broken if the people put
+# a bit of effort to read the very
+#  nonsensical strings that I write
+#  I do not know what to write now
+
+
