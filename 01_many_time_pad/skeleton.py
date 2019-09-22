@@ -51,7 +51,7 @@ for ciphertext1 in ciphers:
     knownSpaceIndexes = []
     
     for ind, val in counter.items():  
-        if val >= 7: 
+        if val >= 7: # miramos en cada posición cuantos carácteres (alpha) hay, puede ser otro numero
             knownSpaceIndexes.append(ind)   
    
     # Espacio en hexadecimal es '20'
