@@ -32,6 +32,8 @@ def str_xor(hex1, hex2):
 # Store the positions where you think there is an space
 # If you xor the ciphertext, with the space symbol, you'll get the key for that position
 
+# Xabier Etxezarreta Argarate
+
 import string
 import collections
 
