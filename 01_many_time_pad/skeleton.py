@@ -86,5 +86,3 @@ for index, cipher in enumerate(ciphers):
 # a bit of effort to read the very
 #  nonsensical strings that I write
 #  I do not know what to write now
-
-
